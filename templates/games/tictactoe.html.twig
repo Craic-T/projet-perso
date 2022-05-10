@@ -1,0 +1,107 @@
+{% extends 'template.html.twig' %}
+
+{% block body %}
+<div class='full-body'>
+
+    <div class="scores">
+        <p>Patrick <span>0</span></p>
+        <p><span>0 </span>Robert</p>
+    </div>
+
+    <div class='tictac-wrapper'>
+        <div class="un square" value='1'></div>
+        <div class="deux square" value='2'></div>
+        <div class="trois square" value='3'></div>
+        <div class="quatre square" value='4'></div>
+        <div class="cinq square" value='5'></div>
+        <div class="six square" value='6'></div>
+        <div class="sept square" value='7'></div>
+        <div class="huit square" value='8'></div>
+        <div class="neuf square" value='9'></div>
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+
+$(function() {
+
+var userSquares = [];
+var user2Squares = [];
+var crossUrl = "images/tictactoe/cross.png";
+var circlesUrl = "images/tictactoe/circle.png";
+var winner = null;
+var turn = 0;
+
+$('.square').each(function() {
+
+    $(this).on('click', function(){
+
+        //if( turn != 0 ){ return ;}
+
+        userPlay($(this));
+
+        let check = checkForWin();
+        if(check != null){ gameFinished(check); }
+
+    })
+
+})
+
+function userPlay(sq)
+{
+    if(turn == 0 )
+    {
+        sq.css('background-image', "url(" + circlesUrl + ")");
+        userSquares.push(parseInt(sq.attr('value')));
+
+        turn = 1;
+    }
+    else{
+        
+        sq.css('background-image', "url(" + crossUrl + ")");
+        user2Squares.push(parseInt(sq.attr('value')));
+
+        turn = 0;
+    }
+
+}
+
+function checkForWin()
+{
+    uS = userSquares;
+    uS2 = user2Squares;
+
+    if(uS.length < 3) {return;}
+
+    // ligne
+    for(i = 1; i <= 7; i +=3 )
+    {
+        if( uS.includes(i) && uS.includes(i+1) && uS.includes(i+2) ) { winner = 'Joueur 1'; }
+        if( uS2.includes(i) && uS2.includes(i+1) && uS2.includes(i+2) ) { winner = 'Joueur 2'; }
+    }
+
+    // colonne
+    for( i = 1; i <= 3; i++)
+    {
+        if( uS.includes(i) && uS.includes(i+3) && uS.includes(i+6) ) { winner = 'Joueur 1'; }
+        if( uS2.includes(i) && uS2.includes(i+3) && uS2.includes(i+6) ) { winner = 'Joueur 2'; }
+    }
+
+    // diagonale
+    if( uS.includes(1) && uS.includes(5) && uS.includes(9) || uS.includes(3) && uS.includes(5) && uS.includes(7)) { winner = 'Joueur 1'; }
+    if( uS2.includes(1) && uS2.includes(5) && uS2.includes(9) || uS2.includes(3) && uS2.includes(5) && uS2.includes(7)) { winner = 'Joueur 2'; }
+
+    return winner;
+}
+
+function gameFinished(e)
+{
+    alert(e + ' remporte la partie !');
+}
+    
+});//End jQuery
+
+</script>
+{% endblock %}
+
